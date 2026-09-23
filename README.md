@@ -23,14 +23,7 @@ Hyprland 0.56.2. Omarchy includes the required tools.
 
 ## Installation
 
-From this local checkout:
-
-```bash
-./install.sh
-```
-
-The installer adds the widget after the workspace numbers. To install through
-Omarchy instead, with access to this repository:
+Install with Omarchy:
 
 ```bash
 omarchy plugin add https://github.com/jesusarchive/omarchy-workspace-layout.git --enable
@@ -56,9 +49,7 @@ and scrolling.
 omarchy plugin remove jesusarchive.workspace-layout
 ```
 
-Remove the shortcut line if you added it. The local installer also copies the
-cycle command to `~/.local/bin/hyprland-workspace-layout-cycle`; remove that
-copy if you no longer use it.
+Remove the shortcut line if you added it.
 
 The widget shows the focused workspace's layout on every monitor. The cycle
 command works on numbered workspaces; named and special workspaces are
