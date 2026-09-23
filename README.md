@@ -17,14 +17,26 @@ beside the workspace numbers.
 
 ## Switching layouts
 
-Hyprland includes all four layouts. Click the symbol to cycle through dwindle,
-master, scrolling, and monocle. By default, each monitor keeps its selected
-layout when you change workspaces.
+Hyprland includes all four layouts. Click the symbol to cycle through the
+enabled layouts. The symbol shows the active layout on each monitor.
 
-In Omarchy's bar editor, choose which layouts appear in the cycle and where the
-choice applies: per monitor, per workspace, or globally across all monitors.
-Leave at least one layout enabled. If you disable the current layout, the next
-cycle selects the first enabled one.
+## Settings
+
+Open the widget settings in Omarchy's bar editor to choose the layouts in the
+cycle. Dwindle, Master, Scrolling, and Monocle are all enabled by default. Keep
+at least one enabled.
+
+**Layout scope** controls where a selection applies:
+
+| Scope | Behavior |
+| --- | --- |
+| Monitor (default) | One layout per monitor, shared by its workspaces. |
+| Workspace | Each workspace keeps its own layout. |
+| Global | One layout across all monitors and workspaces. |
+
+If you disable the current layout, the next cycle selects the first enabled
+one. Clicking the bar symbol and the optional `Super+L` binding use the same
+settings.
 
 ## Installation
 
