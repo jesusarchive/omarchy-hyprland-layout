@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "jesusarchive.workspace-layout",
   "name": "Omarchy Workspace Layout",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "jesusarchive",
   "license": "MIT",
   "description": "Shows the active Hyprland workspace layout in the bar.",
