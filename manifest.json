@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "jesusarchive.workspace-layout",
+  "name": "Omarchy Workspace Layout",
+  "version": "1.0.0",
+  "author": "jesusarchive",
+  "license": "MIT",
+  "description": "Shows the active Hyprland workspace layout as a dwm-style bar symbol.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {"barWidget": "BarWidget.qml"},
+  "barWidget": {
+    "displayName": "Omarchy Workspace Layout",
+    "description": "Shows the active workspace layout and cycles it on click.",
+    "category": "Compositor",
+    "aliases": ["layout-symbol", "dwm-layout"],
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}
