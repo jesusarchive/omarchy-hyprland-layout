@@ -4,10 +4,11 @@ Show the current Hyprland workspace layout beside the workspace numbers in
 the Omarchy bar. The compact symbol follows workspace switches and changes made
 with `Super+L`. Click the symbol to cycle layouts.
 
-![Omarchy bar showing the dwindle symbol on an empty workspace](preview.png)
+![Omarchy bar showing the master layout symbol on an empty workspace](preview.png)
 
-The screenshot shows an empty workspace. The layout symbol is the `[\]` mark
-just after the workspace numbers. A closer view of that part of the bar:
+The screenshot shows an empty workspace with the master layout selected. The
+layout symbol is the `[]=` mark just after the workspace numbers. A closer view
+of that part of the bar:
 
 ![Workspace numbers followed by the layout symbol](assets/bar-detail.png)
 
