@@ -22,8 +22,8 @@ BarWidget {
   readonly property string symbol: {
     switch (layoutName) {
     case "dwindle": return "[\\]"
-    case "master": return "[]="
     case "scrolling": return "|||"
+    case "master": return "[]="
     case "monocle": return "[M]"
     default: return layoutName ? "[?]" : ""
     }

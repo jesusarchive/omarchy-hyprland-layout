@@ -9,7 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-LAYOUTS = ("dwindle", "master", "scrolling", "monocle")
+LAYOUTS = ("dwindle", "scrolling", "master", "monocle")
 STATE_DIR = Path.home() / ".local/state/omarchy-hyprland-layout"
 STATE_FILE = STATE_DIR / "state.json"
 RULES_DIR = Path.home() / ".local/state/omarchy/workspace-layouts"

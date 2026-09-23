@@ -11,8 +11,8 @@ Click the symbol to change layouts.
 | Layout | Symbol |
 | --- | --- |
 | [Dwindle](https://wiki.hypr.land/configuring/layouts/dwindle-layout/) | `[\]` |
-| [Master](https://wiki.hypr.land/configuring/layouts/master-layout/) | `[]=` |
 | [Scrolling](https://wiki.hypr.land/configuring/layouts/scrolling-layout/) | `\|\|\|` |
+| [Master](https://wiki.hypr.land/configuring/layouts/master-layout/) | `[]=` |
 | [Monocle](https://wiki.hypr.land/configuring/layouts/monocle-layout/) | `[M]` |
 
 ## Plugin properties
@@ -33,8 +33,8 @@ You can set the same properties from a terminal:
 ```bash
 omarchy bar set jesusarchive.hyprland-layout layoutScope monitor
 omarchy bar set jesusarchive.hyprland-layout enableDwindle true --json
-omarchy bar set jesusarchive.hyprland-layout enableMaster true --json
 omarchy bar set jesusarchive.hyprland-layout enableScrolling true --json
+omarchy bar set jesusarchive.hyprland-layout enableMaster true --json
 omarchy bar set jesusarchive.hyprland-layout enableMonocle false --json
 ```
 

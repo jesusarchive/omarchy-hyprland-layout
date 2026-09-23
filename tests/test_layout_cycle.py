@@ -40,23 +40,23 @@ class LayoutCycleTests(unittest.TestCase):
 
     def test_monitor_scope_changes_only_that_monitors_workspaces(self):
         state, calls = self.cycle("monitor")
-        self.assertEqual(state, {"_scope": "monitor", "DP-1": "master"})
-        self.assertEqual([call.args for call in calls], [(1, "master"), (2, "master")])
+        self.assertEqual(state, {"_scope": "monitor", "DP-1": "scrolling"})
+        self.assertEqual([call.args for call in calls], [(1, "scrolling"), (2, "scrolling")])
 
     def test_global_scope_changes_all_monitors(self):
         state, calls = self.cycle("global")
-        self.assertEqual(state, {"_scope": "global", "_layout": "master"})
-        self.assertEqual([call.args for call in calls], [(1, "master"), (2, "master"), (3, "master")])
+        self.assertEqual(state, {"_scope": "global", "_layout": "scrolling"})
+        self.assertEqual([call.args for call in calls], [(1, "scrolling"), (2, "scrolling"), (3, "scrolling")])
 
     def test_workspace_scope_changes_only_current_workspace(self):
         state, calls = self.cycle("workspace")
         self.assertEqual(state, {"_scope": "workspace"})
-        self.assertEqual([call.args for call in calls], [(1, "master")])
+        self.assertEqual([call.args for call in calls], [(1, "scrolling")])
 
     def test_disabled_layouts_are_skipped(self):
-        state, calls = self.cycle("workspace", settings={"enableMaster": False})
+        state, calls = self.cycle("workspace", settings={"enableScrolling": False})
         self.assertEqual(state["_scope"], "workspace")
-        self.assertEqual([call.args for call in calls], [(1, "scrolling")])
+        self.assertEqual([call.args for call in calls], [(1, "master")])
 
 
 class SyncTests(unittest.TestCase):
@@ -135,7 +135,7 @@ class SyncTests(unittest.TestCase):
     def test_global_scope_falls_back_to_first_enabled(self):
         state = {}
         self.sync("global", state, settings={"enableDwindle": False}, active_layout="dwindle")
-        self.assertEqual(state["_layout"], "master")
+        self.assertEqual(state["_layout"], "scrolling")
 
     def test_global_scope_repairs_only_mismatches(self):
         for workspace_id in (1, 2, 3):

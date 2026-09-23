@@ -18,15 +18,15 @@
     "defaults": {
       "layoutScope": "monitor",
       "enableDwindle": true,
-      "enableMaster": true,
       "enableScrolling": true,
+      "enableMaster": true,
       "enableMonocle": true
     },
     "schema": [
       {"key": "layoutScope", "type": "enum", "label": "Layout scope", "options": ["monitor", "workspace", "global"], "defaultValue": "monitor"},
       {"key": "enableDwindle", "type": "boolean", "label": "Dwindle", "defaultValue": true},
-      {"key": "enableMaster", "type": "boolean", "label": "Master", "defaultValue": true},
       {"key": "enableScrolling", "type": "boolean", "label": "Scrolling", "defaultValue": true},
+      {"key": "enableMaster", "type": "boolean", "label": "Master", "defaultValue": true},
       {"key": "enableMonocle", "type": "boolean", "label": "Monocle", "defaultValue": true}
     ]
   }
