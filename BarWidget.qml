@@ -25,7 +25,7 @@ BarWidget {
     case "master": return "[]="
     case "scrolling": return "|||"
     case "monocle": return "[M]"
-    default: return "[?]"
+    default: return layoutName ? "[?]" : ""
     }
   }
 
@@ -69,10 +69,8 @@ BarWidget {
         try {
           var monitors = JSON.parse(text || "[]")
           var current = monitors.find(function(item) { return item.monitor === root.monitorName })
-          root.layoutName = current ? String(current.layout || "") : ""
-        } catch (e) {
-          root.layoutName = ""
-        }
+          if (current && current.layout) root.layoutName = String(current.layout)
+        } catch (e) {}
       }
     }
   }
@@ -96,9 +94,9 @@ BarWidget {
   Text {
     id: label
     anchors.centerIn: parent
-    text: root.symbol
+    text: root.symbol || "   "
     color: root.bar ? root.bar.barForeground : Color.foreground
-    opacity: 0.85
+    opacity: root.symbol ? 0.85 : 0
     font.family: "monospace"
     font.pixelSize: Style.font.body
     textFormat: Text.PlainText
