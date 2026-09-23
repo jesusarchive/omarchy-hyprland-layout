@@ -64,7 +64,7 @@ layout list and scope, add this to `~/.config/hypr/bindings.lua`:
 o.rebind(
   "SUPER + L",
   "Cycle Hyprland layout",
-  os.getenv("HOME") .. "/.config/omarchy/plugins/jesusarchive.hyprland-layout/bin/hyprland-layout-cycle"
+  "$HOME/.config/omarchy/plugins/jesusarchive.hyprland-layout/bin/hyprland-layout-cycle"
 )
 ```
 
