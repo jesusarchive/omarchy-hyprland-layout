@@ -20,7 +20,7 @@ beside the workspace numbers.
 Hyprland includes all four layouts. Click the symbol to cycle through the
 enabled layouts. The symbol shows the active layout on each monitor.
 
-## Settings
+## Plugin properties
 
 Open the widget settings in Omarchy's bar editor to choose the layouts in the
 cycle. Dwindle, Master, Scrolling, and Monocle are all enabled by default. Keep
@@ -33,6 +33,19 @@ at least one enabled.
 | monitor (default) | One layout per monitor, shared by its workspaces. |
 | workspace | Each workspace keeps its own layout. |
 | global | One layout across all monitors and workspaces. |
+
+You can change the plugin properties from the terminal:
+
+```bash
+omarchy bar set jesusarchive.workspace-layout layoutScope monitor
+omarchy bar set jesusarchive.workspace-layout enableDwindle true --json
+omarchy bar set jesusarchive.workspace-layout enableMaster true --json
+omarchy bar set jesusarchive.workspace-layout enableScrolling true --json
+omarchy bar set jesusarchive.workspace-layout enableMonocle false --json
+```
+
+Replace `monitor` with `workspace` or `global` to change the scope. Set a layout
+to `true --json` to include it in the cycle, or `false --json` to exclude it.
 
 If you disable the current layout, the next cycle selects the first enabled
 one. Clicking the bar symbol and the optional `Super+L` binding use the same
