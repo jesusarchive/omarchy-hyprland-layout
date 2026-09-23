@@ -1,9 +1,8 @@
 # Omarchy Workspace Layout
 
-A [Dwm](https://dwm.suckless.org/) style workspace layout indicator for the
-Omarchy bar. It shows the focused workspace's [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
-beside the workspace numbers. The symbol updates when you switch workspaces or
-change layouts.
+A [Dwm](https://dwm.suckless.org/) style layout indicator for the Omarchy bar.
+It shows the [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
+beside the workspace numbers.
 
 ![The Omarchy bar on an empty workspace with the master layout selected](preview.png)
 
@@ -18,13 +17,14 @@ change layouts.
 
 ## Switching layouts
 
-Hyprland includes all four layouts; no separate setup is needed. After
-installing the plugin, click its symbol on a numbered workspace to cycle through
-dwindle, master, scrolling, and monocle. The plugin saves the selected layout
-for that workspace.
+Hyprland includes all four layouts. Click the symbol to cycle through dwindle,
+master, scrolling, and monocle. By default, each monitor keeps its selected
+layout when you change workspaces.
 
-Named and special workspaces show their layout but cannot be changed by
-clicking. Every bar shows the focused workspace's layout.
+In Omarchy's bar editor, choose which layouts appear in the cycle and where the
+choice applies: per monitor, per workspace, or globally across all monitors.
+Leave at least one layout enabled. If you disable the current layout, the next
+cycle selects the first enabled one.
 
 ## Installation
 
@@ -38,8 +38,9 @@ Choose the left bar section, then drag the widget after the workspace numbers.
 
 ## Cycle all layouts with Super+L
 
-Omarchy's default shortcut cycles only dwindle and scrolling. To cycle all four
-layouts with `Super+L`, add this to `~/.config/hypr/bindings.lua`:
+Omarchy's default shortcut cycles only dwindle and scrolling. To use the plugin's
+layout selection and scope with `Super+L`, add this to
+`~/.config/hypr/bindings.lua`:
 
 ```lua
 o.rebind(

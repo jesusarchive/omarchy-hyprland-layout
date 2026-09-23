@@ -10,8 +10,14 @@ BarWidget {
   moduleName: "jesusarchive.workspace-layout"
 
   property string layoutName: ""
-  property int workspaceId: 0
   property bool refreshPending: false
+  readonly property string helper: String(Qt.resolvedUrl("bin/hyprland-workspace-layout-cycle")).replace(/^file:\/\//, "")
+  readonly property string monitorName: {
+    var win = root.QsWindow.window
+    return win && win.screen ? String(win.screen.name) : ""
+  }
+
+  onMonitorNameChanged: refresh()
 
   readonly property string symbol: {
     switch (layoutName) {
@@ -34,14 +40,13 @@ BarWidget {
 
   Component.onCompleted: refresh()
 
-  // Poll for layout changes that have no workspace switch event.
   Connections {
     target: Hyprland
     function onRawEvent(event) {
       if (!event || !event.name) return
       var name = String(event.name)
       if (name === "workspace" || name === "workspacev2" ||
-          name === "focusedmon" || name === "configreloaded") root.refresh()
+          name === "focusedmon" || name === "configreloaded") shortcutRefresh.restart()
     }
   }
 
@@ -54,7 +59,7 @@ BarWidget {
 
   Process {
     id: query
-    command: ["hyprctl", "-j", "activeworkspace"]
+    command: [root.helper, "status"]
     onRunningChanged: {
       if (!running && root.refreshPending) root.refresh()
     }
@@ -62,9 +67,9 @@ BarWidget {
       waitForEnd: true
       onStreamFinished: {
         try {
-          var workspace = JSON.parse(text || "{}")
-          root.workspaceId = Number(workspace.id) || 0
-          root.layoutName = String(workspace.tiledLayout || "")
+          var monitors = JSON.parse(text || "[]")
+          var current = monitors.find(function(item) { return item.monitor === root.monitorName })
+          root.layoutName = current ? String(current.layout || "") : ""
         } catch (e) {
           root.layoutName = ""
         }
@@ -72,11 +77,8 @@ BarWidget {
     }
   }
 
-  // Refresh after Super+L updates the workspace layout rule.
   FileView {
-    path: root.workspaceId > 0
-      ? (Quickshell.env("HOME") || "") + "/.local/state/omarchy/workspace-layouts/" + root.workspaceId + ".lua"
-      : ""
+    path: (Quickshell.env("HOME") || "") + "/.local/state/omarchy-workspace-layout/monitors.json"
     watchChanges: true
     printErrors: false
     onFileChanged: shortcutRefresh.restart()
@@ -105,12 +107,13 @@ BarWidget {
 
   MouseArea {
     anchors.fill: parent
+    enabled: root.layoutName !== "" && root.monitorName !== ""
     hoverEnabled: true
     acceptedButtons: Qt.LeftButton
     cursorShape: Qt.PointingHandCursor
     onClicked: {
-      var helper = String(Qt.resolvedUrl("bin/hyprland-workspace-layout-cycle")).replace(/^file:\/\//, "")
-      if (root.bar) root.bar.run(Util.shellQuote(helper))
+      if (root.bar && root.monitorName)
+        root.bar.run(Util.shellQuote(root.helper) + " cycle " + Util.shellQuote(root.monitorName))
     }
     onEntered: if (root.bar) root.bar.showTooltip(root, root.layoutName || "Unknown layout")
     onExited: if (root.bar) root.bar.hideTooltip(root)

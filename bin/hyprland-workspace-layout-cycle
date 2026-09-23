@@ -1,25 +1,203 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env python3
+"""Cycle and restore a layout for each monitor."""
 
-# Cycle the active workspace through dwindle, master, scrolling, and monocle.
-# Save the choice so Omarchy restores it after a Hyprland reload.
+import fcntl
+import json
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
 
-WORKSPACE=$(hyprctl -j activeworkspace)
-ACTIVE_WORKSPACE=$(jq -r '.id' <<<"$WORKSPACE")
-[[ $ACTIVE_WORKSPACE =~ ^[1-9][0-9]*$ ]] || exit 1
-CURRENT_LAYOUT=$(jq -r '.tiledLayout' <<<"$WORKSPACE")
-LAYOUTS_DIR="$HOME/.local/state/omarchy/workspace-layouts"
-LAYOUT_FILE="$LAYOUTS_DIR/$ACTIVE_WORKSPACE.lua"
+LAYOUTS = ("dwindle", "master", "scrolling", "monocle")
+STATE_DIR = Path.home() / ".local/state/omarchy-workspace-layout"
+STATE_FILE = STATE_DIR / "monitors.json"
+RULES_DIR = Path.home() / ".local/state/omarchy/workspace-layouts"
+SHELL_CONFIG = Path.home() / ".config/omarchy/shell.json"
 
-case "$CURRENT_LAYOUT" in
-  dwindle) NEW_LAYOUT=master ;;
-  master) NEW_LAYOUT=scrolling ;;
-  scrolling) NEW_LAYOUT=monocle ;;
-  *) NEW_LAYOUT=dwindle ;;
-esac
 
-mkdir -p "$LAYOUTS_DIR"
-hyprctl eval "hl.workspace_rule({ workspace = \"$ACTIVE_WORKSPACE\", layout = \"$NEW_LAYOUT\" })" >/dev/null 2>&1 || \
-  hyprctl keyword workspace "$ACTIVE_WORKSPACE, layout:$NEW_LAYOUT"
-printf 'hl.workspace_rule({ workspace = "%s", layout = "%s" })\n' "$ACTIVE_WORKSPACE" "$NEW_LAYOUT" >"$LAYOUT_FILE"
-omarchy-notification-send -g 󱂬 "Workspace layout set to $NEW_LAYOUT"
+def widget_settings():
+    try:
+        config = json.loads(SHELL_CONFIG.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    for section in config.get("bar", {}).get("layout", {}).values():
+        if not isinstance(section, list):
+            continue
+        for widget in section:
+            if isinstance(widget, dict) and widget.get("id") == "jesusarchive.workspace-layout":
+                return widget
+    return {}
+
+
+def enabled_layouts(settings):
+    return tuple(layout for layout in LAYOUTS if settings.get("enable" + layout.title(), True) is not False)
+
+
+def layout_scope(settings):
+    return {
+        "Workspace": "workspace",
+        "Global": "global",
+    }.get(settings.get("layoutScope"), "monitor")
+
+
+def hyprctl_json(command):
+    result = subprocess.run(["hyprctl", "-j", command], check=True, capture_output=True, text=True)
+    return json.loads(result.stdout)
+
+
+def workspaces_on_monitors():
+    workspaces = {item["id"]: item for item in hyprctl_json("workspaces")}
+    result = []
+    for monitor in hyprctl_json("monitors"):
+        workspace_id = monitor["activeWorkspace"]["id"]
+        if workspace_id > 0 and workspace_id in workspaces:
+            result.append({
+                "monitor": monitor["name"],
+                "workspace": workspace_id,
+                "layout": workspaces[workspace_id]["tiledLayout"],
+            })
+    return result
+
+
+def numbered_workspaces():
+    return [item for item in hyprctl_json("workspaces") if item["id"] > 0]
+
+
+def write_atomic(path, contents):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, delete=False) as file:
+        temporary = Path(file.name)
+        file.write(contents)
+    os.replace(temporary, path)
+
+
+def load_state():
+    if not STATE_FILE.exists():
+        return {}
+    return json.loads(STATE_FILE.read_text())
+
+
+def save_state(state):
+    write_atomic(STATE_FILE, json.dumps(state, sort_keys=True) + "\n")
+
+
+def rule_text(workspace_id, layout):
+    return f'hl.workspace_rule({{ workspace = "{workspace_id}", layout = "{layout}" }})\n'
+
+
+def apply_layout(workspace_id, layout):
+    rule = rule_text(workspace_id, layout)
+    result = subprocess.run(["hyprctl", "eval", rule.strip()], capture_output=True)
+    if result.returncode != 0:
+        subprocess.run(
+            ["hyprctl", "keyword", "workspace", f"{workspace_id}, layout:{layout}"],
+            check=True,
+            capture_output=True,
+        )
+    write_atomic(RULES_DIR / f"{workspace_id}.lua", rule)
+
+
+def sync(state):
+    settings = widget_settings()
+    scope = layout_scope(settings)
+    changed = state.get("_scope") != scope
+    if changed:
+        state.clear()
+        state["_scope"] = scope
+    if scope == "workspace":
+        if changed:
+            save_state(state)
+        return
+    enabled = enabled_layouts(settings)
+    if scope == "global":
+        layout = state.get("_layout")
+        if enabled and layout not in enabled:
+            active = hyprctl_json("activeworkspace")
+            layout = active.get("tiledLayout")
+            if layout not in enabled:
+                layout = enabled[0]
+            state["_layout"] = layout
+            changed = True
+        for workspace in numbered_workspaces():
+            if not enabled:
+                break
+            rule_file = RULES_DIR / f'{workspace["id"]}.lua'
+            if workspace["tiledLayout"] != layout or not rule_file.exists() or rule_file.read_text() != rule_text(workspace["id"], layout):
+                apply_layout(workspace["id"], layout)
+        if changed:
+            save_state(state)
+        return
+    for workspace in workspaces_on_monitors():
+        monitor = workspace["monitor"]
+        layout = state.get(monitor)
+        if enabled and layout not in enabled:
+            layout = workspace["layout"] if workspace["layout"] in enabled else enabled[0]
+            state[monitor] = layout
+            changed = True
+        elif not enabled:
+            continue
+        rule_file = RULES_DIR / f'{workspace["workspace"]}.lua'
+        if workspace["layout"] != layout or not rule_file.exists() or rule_file.read_text() != rule_text(workspace["workspace"], layout):
+            apply_layout(workspace["workspace"], layout)
+    if changed:
+        save_state(state)
+
+
+def cycle(state, requested_monitor):
+    settings = widget_settings()
+    enabled = enabled_layouts(settings)
+    if not enabled:
+        raise ValueError("enable at least one layout in the plugin settings")
+    scope = layout_scope(settings)
+    if state.get("_scope") != scope:
+        state.clear()
+        state["_scope"] = scope
+    workspaces = workspaces_on_monitors()
+    if requested_monitor:
+        workspace = next((item for item in workspaces if item["monitor"] == requested_monitor), None)
+    else:
+        active = hyprctl_json("activeworkspace")
+        workspace = next((item for item in workspaces if item["monitor"] == active["monitor"]), None)
+    if workspace is None:
+        raise ValueError("no numbered workspace on the selected monitor")
+    if scope == "monitor":
+        current = state.get(workspace["monitor"], workspace["layout"])
+    elif scope == "global":
+        current = state.get("_layout", workspace["layout"])
+    else:
+        current = workspace["layout"]
+    next_layout = enabled[(enabled.index(current) + 1) % len(enabled)] if current in enabled else enabled[0]
+    if scope in ("monitor", "global"):
+        for item in numbered_workspaces():
+            if scope == "global" or item["monitor"] == workspace["monitor"]:
+                apply_layout(item["id"], next_layout)
+        if scope == "global":
+            state["_layout"] = next_layout
+        else:
+            state[workspace["monitor"]] = next_layout
+    else:
+        apply_layout(workspace["workspace"], next_layout)
+    save_state(state)
+    subprocess.run(["omarchy-notification-send", "-g", "󱂬", f"Workspace layout set to {next_layout}"], check=False)
+
+
+def main():
+    action = sys.argv[1] if len(sys.argv) > 1 else "cycle"
+    if action == "status":
+        print(json.dumps(workspaces_on_monitors()))
+        return
+    if action not in ("cycle", "sync"):
+        raise ValueError(f"unknown action: {action}")
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    with (STATE_DIR / ".lock").open("w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        state = load_state()
+        if action == "sync":
+            sync(state)
+        else:
+            cycle(state, sys.argv[2] if len(sys.argv) > 2 else "")
+
+
+if __name__ == "__main__":
+    main()
