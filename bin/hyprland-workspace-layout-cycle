@@ -35,10 +35,8 @@ def enabled_layouts(settings):
 
 
 def layout_scope(settings):
-    return {
-        "Workspace": "workspace",
-        "Global": "global",
-    }.get(settings.get("layoutScope"), "monitor")
+    scope = str(settings.get("layoutScope", "monitor")).lower()
+    return scope if scope in ("monitor", "workspace", "global") else "monitor"
 
 
 def hyprctl_json(command):

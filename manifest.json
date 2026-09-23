@@ -16,14 +16,14 @@
     "allowMultiple": false,
     "defaultSection": "left",
     "defaults": {
-      "layoutScope": "Monitor",
+      "layoutScope": "monitor",
       "enableDwindle": true,
       "enableMaster": true,
       "enableScrolling": true,
       "enableMonocle": true
     },
     "schema": [
-      {"key": "layoutScope", "type": "enum", "label": "Layout scope", "options": ["Monitor", "Workspace", "Global"], "defaultValue": "Monitor"},
+      {"key": "layoutScope", "type": "enum", "label": "Layout scope", "options": ["monitor", "workspace", "global"], "defaultValue": "monitor"},
       {"key": "enableDwindle", "type": "boolean", "label": "Dwindle", "defaultValue": true},
       {"key": "enableMaster", "type": "boolean", "label": "Master", "defaultValue": true},
       {"key": "enableScrolling", "type": "boolean", "label": "Scrolling", "defaultValue": true},

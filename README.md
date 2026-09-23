@@ -30,9 +30,9 @@ at least one enabled.
 
 | Scope | Behavior |
 | --- | --- |
-| Monitor (default) | One layout per monitor, shared by its workspaces. |
-| Workspace | Each workspace keeps its own layout. |
-| Global | One layout across all monitors and workspaces. |
+| monitor (default) | One layout per monitor, shared by its workspaces. |
+| workspace | Each workspace keeps its own layout. |
+| global | One layout across all monitors and workspaces. |
 
 If you disable the current layout, the next cycle selects the first enabled
 one. Clicking the bar symbol and the optional `Super+L` binding use the same
