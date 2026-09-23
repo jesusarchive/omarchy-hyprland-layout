@@ -16,10 +16,11 @@ use Omarchy's `Super+L` shortcut.
 | [Scrolling](https://wiki.hypr.land/configuring/layouts/scrolling-layout/) | `\|\|\|` |
 | [Monocle](https://wiki.hypr.land/configuring/layouts/monocle-layout/) | `[M]` |
 
-Hyprland includes all four layouts. On a numbered workspace, click the symbol
-to cycle through them. The selected layout is saved for that workspace. Named
-and special workspaces show their layout but cannot be changed by clicking.
-Every bar shows the focused workspace's layout.
+Hyprland includes all four layouts; no extra installation or config is needed.
+After installing the plugin, click its symbol on a numbered workspace to cycle
+through dwindle, master, scrolling, and monocle. The plugin saves the selected
+layout for that workspace. Named and special workspaces show their layout but
+cannot be changed by clicking. Every bar shows the focused workspace's layout.
 
 ## Installation
 
