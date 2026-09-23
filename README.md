@@ -1,7 +1,8 @@
 # Omarchy Workspace Layout
 
-Show the current Hyprland workspace layout beside the workspace numbers in the
-Omarchy bar. The symbol updates when you switch workspaces or press `Super+L`.
+Show the current Hyprland workspace layout as a dwm-style symbol beside the
+workspace numbers in the Omarchy bar. The symbol updates when you switch
+workspaces or press `Super+L`.
 Click it to cycle layouts.
 
 ![The Omarchy bar on an empty workspace with the master layout selected](preview.png)
