@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 
@@ -27,6 +28,13 @@ Item {
           name === "focusedmon" || name === "monitoradded" ||
           name === "monitorremoved" || name === "configreloaded") syncTimer.restart()
     }
+  }
+
+  FileView {
+    path: (Quickshell.env("HOME") || "") + "/.config/omarchy/shell.json"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: syncTimer.restart()
   }
 
   Timer {

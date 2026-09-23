@@ -14,6 +14,7 @@ STATE_DIR = Path.home() / ".local/state/omarchy-hyprland-layout"
 STATE_FILE = STATE_DIR / "state.json"
 RULES_DIR = Path.home() / ".local/state/omarchy/workspace-layouts"
 SHELL_CONFIG = Path.home() / ".config/omarchy/shell.json"
+COMMAND_TIMEOUT = 5
 
 
 def widget_settings():
@@ -40,7 +41,10 @@ def layout_scope(settings):
 
 
 def hyprctl_json(command):
-    result = subprocess.run(["hyprctl", "-j", command], check=True, capture_output=True, text=True)
+    result = subprocess.run(
+        ["hyprctl", "-j", command], check=True, capture_output=True, text=True,
+        timeout=COMMAND_TIMEOUT,
+    )
     return json.loads(result.stdout)
 
 
@@ -71,9 +75,11 @@ def write_atomic(path, contents):
 
 
 def load_state():
-    if not STATE_FILE.exists():
+    try:
+        state = json.loads(STATE_FILE.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
         return {}
-    return json.loads(STATE_FILE.read_text())
+    return state if isinstance(state, dict) else {}
 
 
 def save_state(state):
@@ -86,12 +92,16 @@ def rule_text(workspace_id, layout):
 
 def apply_layout(workspace_id, layout):
     rule = rule_text(workspace_id, layout)
-    result = subprocess.run(["hyprctl", "eval", rule.strip()], capture_output=True)
+    result = subprocess.run(
+        ["hyprctl", "eval", rule.strip()], capture_output=True,
+        timeout=COMMAND_TIMEOUT,
+    )
     if result.returncode != 0:
         subprocess.run(
             ["hyprctl", "keyword", "workspace", f"{workspace_id}, layout:{layout}"],
             check=True,
             capture_output=True,
+            timeout=COMMAND_TIMEOUT,
         )
     write_atomic(RULES_DIR / f"{workspace_id}.lua", rule)
 
@@ -146,7 +156,11 @@ def cycle(state, requested_monitor):
     settings = widget_settings()
     enabled = enabled_layouts(settings)
     if not enabled:
-        raise ValueError("enable at least one layout in the plugin settings")
+        subprocess.run(
+            ["omarchy-notification-send", "-g", "󱂬", "Enable a layout in the plugin settings"],
+            check=False, timeout=COMMAND_TIMEOUT,
+        )
+        return
     scope = layout_scope(settings)
     if state.get("_scope") != scope:
         state.clear()
@@ -177,7 +191,10 @@ def cycle(state, requested_monitor):
     else:
         apply_layout(workspace["workspace"], next_layout)
     save_state(state)
-    subprocess.run(["omarchy-notification-send", "-g", "󱂬", f"Workspace layout set to {next_layout}"], check=False)
+    subprocess.run(
+        ["omarchy-notification-send", "-g", "󱂬", f"Workspace layout set to {next_layout}"],
+        check=False, timeout=COMMAND_TIMEOUT,
+    )
 
 
 def main():
@@ -187,7 +204,8 @@ def main():
         return
     if action not in ("cycle", "sync"):
         raise ValueError(f"unknown action: {action}")
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
+    STATE_DIR.chmod(0o700)
     with (STATE_DIR / ".lock").open("w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         state = load_state()

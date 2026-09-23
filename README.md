@@ -45,13 +45,15 @@ The bar click and the optional `Super+L` shortcut use these settings.
 
 ## Installation
 
-Install from the private repository:
+Install from GitHub:
 
 ```bash
-omarchy plugin add git@github.com:jesusarchive/omarchy-hyprland-layout.git --enable
+omarchy plugin add https://github.com/jesusarchive/omarchy-hyprland-layout.git --enable
 ```
 
 Place the widget in the left bar section.
+
+The helper requires Python 3 and `hyprctl`.
 
 ## Super+L
 
@@ -73,5 +75,8 @@ omarchy plugin remove jesusarchive.hyprland-layout
 ```
 
 Remove the `Super+L` override from `~/.config/hypr/bindings.lua` if you added it.
+To discard the saved scope and layouts, remove
+`~/.local/state/omarchy-hyprland-layout/`. Omarchy keeps the workspace layout
+rules the plugin wrote in `~/.local/state/omarchy/workspace-layouts/`.
 
 Licensed under [MIT](LICENSE).
