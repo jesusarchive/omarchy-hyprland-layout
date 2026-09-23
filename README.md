@@ -1,9 +1,9 @@
 # Omarchy Workspace Layout
 
 A [dwm](https://dwm.suckless.org/)-style workspace layout indicator for the
-Omarchy bar. It shows the focused Hyprland workspace's layout beside the
-workspace numbers and updates when you switch workspaces or use Omarchy's
-`Super+L` shortcut. Click the symbol to cycle layouts.
+Omarchy bar. It shows the focused workspace's [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
+beside the workspace numbers. The symbol updates when you switch workspaces or
+use Omarchy's `Super+L` shortcut.
 
 ![The Omarchy bar on an empty workspace with the master layout selected](preview.png)
 
@@ -11,13 +11,15 @@ workspace numbers and updates when you switch workspaces or use Omarchy's
 
 | Layout | Symbol |
 | --- | --- |
-| Dwindle | `[\]` |
-| Master | `[]=` |
-| Scrolling | `\|\|\|` |
-| Monocle | `[M]` |
+| [Dwindle](https://wiki.hypr.land/configuring/layouts/dwindle-layout/) | `[\]` |
+| [Master](https://wiki.hypr.land/configuring/layouts/master-layout/) | `[]=` |
+| [Scrolling](https://wiki.hypr.land/configuring/layouts/scrolling-layout/) | `\|\|\|` |
+| [Monocle](https://wiki.hypr.land/configuring/layouts/monocle-layout/) | `[M]` |
 
-These are Hyprland's four built-in layouts. Every bar shows the focused
-workspace's layout. Clicking cycles layouts on numbered workspaces only.
+Hyprland includes all four layouts. On a numbered workspace, click the symbol
+to cycle through them. The selected layout is saved for that workspace. Named
+and special workspaces show their layout but cannot be changed by clicking.
+Every bar shows the focused workspace's layout.
 
 ## Installation
 
