@@ -111,7 +111,6 @@ BarWidget {
     onClicked: {
       var helper = String(Qt.resolvedUrl("bin/hyprland-workspace-layout-cycle")).replace(/^file:\/\//, "")
       if (root.bar) root.bar.run(Util.shellQuote(helper))
-      Qt.callLater(root.refresh)
     }
     onEntered: if (root.bar) root.bar.showTooltip(root, root.layoutName || "Unknown layout")
     onExited: if (root.bar) root.bar.hideTooltip(root)
