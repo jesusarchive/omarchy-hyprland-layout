@@ -12,11 +12,8 @@ Click it to cycle layouts.
 | --- | --- |
 | Dwindle | `[\]` |
 | Master | `[]=` |
-| Scrolling | `|||` |
+| Scrolling | `\|\|\|` |
 | Monocle | `[M]` |
-
-`[]=` and `[M]` come from [dwm](https://git.suckless.org/dwm/file/config.def.h.html).
-`[\]` comes from its [Fibonacci patch](https://dwm.suckless.org/patches/fibonacci/).
 
 ## Requirements
 
