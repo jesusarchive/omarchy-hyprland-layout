@@ -34,8 +34,7 @@ BarWidget {
 
   Component.onCompleted: refresh()
 
-  // Workspace switches have compositor events. A short poll also catches
-  // layout changes made through Hyprland's workspace rule command.
+  // Poll for layout changes that have no workspace switch event.
   Connections {
     target: Hyprland
     function onRawEvent(event) {
@@ -73,8 +72,7 @@ BarWidget {
     }
   }
 
-  // Super+L writes the per-workspace rule before applying it. Watch that file
-  // and query once Hyprland has had a moment to apply the new layout.
+  // Refresh after Super+L updates the workspace layout rule.
   FileView {
     path: root.workspaceId > 0
       ? (Quickshell.env("HOME") || "") + "/.local/state/omarchy/workspace-layouts/" + root.workspaceId + ".lua"
