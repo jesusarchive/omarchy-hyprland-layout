@@ -106,48 +106,50 @@ def apply_layout(workspace_id, layout):
     write_atomic(RULES_DIR / f"{workspace_id}.lua", rule)
 
 
+def notify(message):
+    subprocess.run(
+        ["omarchy-notification-send", "-g", "󱂬", message],
+        check=False, timeout=COMMAND_TIMEOUT,
+    )
+
+
+def reset_on_scope_change(state, scope):
+    if state.get("_scope") == scope:
+        return False
+    state.clear()
+    state["_scope"] = scope
+    return True
+
+
+def ensure_layout(workspace_id, current, layout):
+    rule_file = RULES_DIR / f"{workspace_id}.lua"
+    if current != layout or not rule_file.exists() or rule_file.read_text() != rule_text(workspace_id, layout):
+        apply_layout(workspace_id, layout)
+
+
 def sync(state):
     settings = widget_settings()
     scope = layout_scope(settings)
-    changed = state.get("_scope") != scope
-    if changed:
-        state.clear()
-        state["_scope"] = scope
-    if scope == "workspace":
-        if changed:
-            save_state(state)
-        return
+    changed = reset_on_scope_change(state, scope)
     enabled = enabled_layouts(settings)
-    if scope == "global":
+    if scope == "global" and enabled:
         layout = state.get("_layout")
-        if enabled and layout not in enabled:
-            active = hyprctl_json("activeworkspace")
-            layout = active.get("tiledLayout")
+        if layout not in enabled:
+            layout = hyprctl_json("activeworkspace").get("tiledLayout")
             if layout not in enabled:
                 layout = enabled[0]
             state["_layout"] = layout
             changed = True
         for workspace in numbered_workspaces():
-            if not enabled:
-                break
-            rule_file = RULES_DIR / f'{workspace["id"]}.lua'
-            if workspace["tiledLayout"] != layout or not rule_file.exists() or rule_file.read_text() != rule_text(workspace["id"], layout):
-                apply_layout(workspace["id"], layout)
-        if changed:
-            save_state(state)
-        return
-    for workspace in workspaces_on_monitors():
-        monitor = workspace["monitor"]
-        layout = state.get(monitor)
-        if enabled and layout not in enabled:
-            layout = workspace["layout"] if workspace["layout"] in enabled else enabled[0]
-            state[monitor] = layout
-            changed = True
-        elif not enabled:
-            continue
-        rule_file = RULES_DIR / f'{workspace["workspace"]}.lua'
-        if workspace["layout"] != layout or not rule_file.exists() or rule_file.read_text() != rule_text(workspace["workspace"], layout):
-            apply_layout(workspace["workspace"], layout)
+            ensure_layout(workspace["id"], workspace["tiledLayout"], layout)
+    elif scope == "monitor" and enabled:
+        for workspace in workspaces_on_monitors():
+            layout = state.get(workspace["monitor"])
+            if layout not in enabled:
+                layout = workspace["layout"] if workspace["layout"] in enabled else enabled[0]
+                state[workspace["monitor"]] = layout
+                changed = True
+            ensure_layout(workspace["workspace"], workspace["layout"], layout)
     if changed:
         save_state(state)
 
@@ -156,15 +158,10 @@ def cycle(state, requested_monitor):
     settings = widget_settings()
     enabled = enabled_layouts(settings)
     if not enabled:
-        subprocess.run(
-            ["omarchy-notification-send", "-g", "󱂬", "Enable a layout in the plugin settings"],
-            check=False, timeout=COMMAND_TIMEOUT,
-        )
+        notify("Enable a layout in the plugin settings")
         return
     scope = layout_scope(settings)
-    if state.get("_scope") != scope:
-        state.clear()
-        state["_scope"] = scope
+    reset_on_scope_change(state, scope)
     workspaces = workspaces_on_monitors()
     if requested_monitor:
         workspace = next((item for item in workspaces if item["monitor"] == requested_monitor), None)
@@ -191,10 +188,7 @@ def cycle(state, requested_monitor):
     else:
         apply_layout(workspace["workspace"], next_layout)
     save_state(state)
-    subprocess.run(
-        ["omarchy-notification-send", "-g", "󱂬", f"Workspace layout set to {next_layout}"],
-        check=False, timeout=COMMAND_TIMEOUT,
-    )
+    notify(f"Workspace layout set to {next_layout}")
 
 
 def main():
