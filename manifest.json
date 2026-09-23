@@ -12,7 +12,7 @@
     "displayName": "Omarchy Workspace Layout",
     "description": "Shows the active workspace layout. Click to cycle layouts.",
     "category": "Compositor",
-    "aliases": ["layout-symbol", "dwm-layout"],
+    "aliases": ["layout-symbol"],
     "allowMultiple": false,
     "defaultSection": "left"
   }
