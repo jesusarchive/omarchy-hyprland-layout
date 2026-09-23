@@ -1,8 +1,8 @@
 # Omarchy Workspace Layout
 
-A [Dwm](https://dwm.suckless.org/) style layout indicator for the Omarchy bar.
-It shows the [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
-beside the workspace numbers.
+[Dwm](https://dwm.suckless.org/) style layout indicator for the Omarchy bar.
+It shows the current [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
+beside the workspace numbers. Click the symbol to change layouts.
 
 ![The Omarchy bar on an empty workspace with the master layout selected](preview.png)
 
@@ -15,18 +15,12 @@ beside the workspace numbers.
 | [Scrolling](https://wiki.hypr.land/configuring/layouts/scrolling-layout/) | `\|\|\|` |
 | [Monocle](https://wiki.hypr.land/configuring/layouts/monocle-layout/) | `[M]` |
 
-## Switching layouts
-
-Hyprland includes all four layouts. Click the symbol to cycle through the
-enabled layouts. The symbol shows the active layout on each monitor.
-
 ## Plugin properties
 
-Open the widget settings in Omarchy's bar editor to choose the layouts in the
-cycle. Dwindle, Master, Scrolling, and Monocle are all enabled by default. Keep
-at least one enabled.
+The bar editor lets you choose which layouts to cycle through. All four are
+enabled by default. Keep at least one enabled.
 
-**Layout scope** controls where a selection applies:
+The scope controls where the selected layout applies:
 
 | Scope | Behavior |
 | --- | --- |
@@ -34,7 +28,7 @@ at least one enabled.
 | workspace | Each workspace keeps its own layout. |
 | global | One layout across all monitors and workspaces. |
 
-You can change the plugin properties from the terminal:
+You can set the same properties from a terminal:
 
 ```bash
 omarchy bar set jesusarchive.workspace-layout layoutScope monitor
@@ -44,16 +38,14 @@ omarchy bar set jesusarchive.workspace-layout enableScrolling true --json
 omarchy bar set jesusarchive.workspace-layout enableMonocle false --json
 ```
 
-Replace `monitor` with `workspace` or `global` to change the scope. Set a layout
-to `true --json` to include it in the cycle, or `false --json` to exclude it.
+Set `layoutScope` to `monitor`, `workspace`, or `global`. Use `true --json` to
+include a layout in the cycle and `false --json` to exclude it.
 
-If you disable the current layout, the next cycle selects the first enabled
-one. Clicking the bar symbol and the optional `Super+L` binding use the same
-settings.
+The bar click and the optional `Super+L` shortcut use these settings.
 
 ## Installation
 
-Install with Omarchy using SSH access to this private repository:
+Install from the private repository:
 
 ```bash
 omarchy plugin add git@github.com:jesusarchive/omarchy-workspace-layout.git --enable
@@ -61,11 +53,10 @@ omarchy plugin add git@github.com:jesusarchive/omarchy-workspace-layout.git --en
 
 Choose the left bar section, then drag the widget after the workspace numbers.
 
-## Cycle all layouts with Super+L
+## Super+L
 
-Omarchy's default shortcut cycles only dwindle and scrolling. To use the plugin's
-layout selection and scope with `Super+L`, add this to
-`~/.config/hypr/bindings.lua`:
+Omarchy's default `Super+L` cycles dwindle and scrolling. To use this plugin's
+layout list and scope, add this to `~/.config/hypr/bindings.lua`:
 
 ```lua
 o.rebind(
