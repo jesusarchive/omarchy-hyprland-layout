@@ -15,9 +15,8 @@ Click it to cycle layouts.
 | Scrolling | `|||` |
 | Monocle | `[M]` |
 
-The symbols draw from [dwm](https://git.suckless.org/dwm/file/config.def.h.html)
-and its [Fibonacci patch](https://dwm.suckless.org/patches/fibonacci/).
-`|||` is this plugin's symbol for scrolling.
+`[]=` and `[M]` come from [dwm](https://git.suckless.org/dwm/file/config.def.h.html).
+`[\]` comes from its [Fibonacci patch](https://dwm.suckless.org/patches/fibonacci/).
 
 ## Requirements
 
