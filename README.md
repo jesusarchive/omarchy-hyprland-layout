@@ -1,6 +1,6 @@
 # Omarchy Workspace Layout
 
-A [dwm](https://dwm.suckless.org/)-style workspace layout indicator for the
+A [Dwm](https://dwm.suckless.org/) style workspace layout indicator for the
 Omarchy bar. It shows the focused workspace's [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
 beside the workspace numbers. The symbol updates when you switch workspaces or
 change layouts.
