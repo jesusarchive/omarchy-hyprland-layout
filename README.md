@@ -23,9 +23,8 @@ installing the plugin, click its symbol on a numbered workspace to cycle through
 dwindle, master, scrolling, and monocle. The plugin saves the selected layout
 for that workspace.
 
-The indicator also follows layout changes made with `Super+L`. Named and
-special workspaces show their layout but cannot be changed by clicking. Every
-bar shows the focused workspace's layout.
+Named and special workspaces show their layout but cannot be changed by
+clicking. Every bar shows the focused workspace's layout.
 
 ## Installation
 
@@ -37,10 +36,25 @@ omarchy plugin add git@github.com:jesusarchive/omarchy-workspace-layout.git --en
 
 Choose the left bar section, then drag the widget after the workspace numbers.
 
+## Cycle all layouts with Super+L
+
+Omarchy's default shortcut cycles only dwindle and scrolling. To cycle all four
+layouts with `Super+L`, add this to `~/.config/hypr/bindings.lua`:
+
+```lua
+o.rebind(
+  "SUPER + L",
+  "Cycle workspace layout",
+  os.getenv("HOME") .. "/.config/omarchy/plugins/jesusarchive.workspace-layout/bin/hyprland-workspace-layout-cycle"
+)
+```
+
 ## Removal
 
 ```bash
 omarchy plugin remove jesusarchive.workspace-layout
 ```
+
+Remove the `Super+L` override from `~/.config/hypr/bindings.lua` if you added it.
 
 Licensed under [MIT](LICENSE).
