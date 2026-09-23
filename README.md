@@ -26,25 +26,11 @@ omarchy plugin add git@github.com:jesusarchive/omarchy-workspace-layout.git --en
 
 Choose the left bar section, then drag the widget after the workspace numbers.
 
-## Shortcut
-
-The included command cycles dwindle, master, scrolling, and monocle. To bind it
-to `Super+L`, add this to `~/.config/hypr/bindings.lua`:
-
-```lua
-o.rebind("SUPER + L", "Cycle workspace layout", os.getenv("HOME") .. "/.config/omarchy/plugins/jesusarchive.workspace-layout/bin/hyprland-workspace-layout-cycle")
-```
-
-This replaces Omarchy's default `Super+L` action, which cycles only dwindle
-and scrolling.
-
 ## Removal
 
 ```bash
 omarchy plugin remove jesusarchive.workspace-layout
 ```
-
-Remove the shortcut line if you added it.
 
 The widget shows the focused workspace's layout on every monitor. The cycle
 command works on numbered workspaces; named and special workspaces are
