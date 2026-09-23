@@ -3,7 +3,7 @@
 A [dwm](https://dwm.suckless.org/)-style workspace layout indicator for the
 Omarchy bar. It shows the focused workspace's [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
 beside the workspace numbers. The symbol updates when you switch workspaces or
-use Omarchy's `Super+L` shortcut.
+change layouts.
 
 ![The Omarchy bar on an empty workspace with the master layout selected](preview.png)
 
@@ -16,11 +16,16 @@ use Omarchy's `Super+L` shortcut.
 | [Scrolling](https://wiki.hypr.land/configuring/layouts/scrolling-layout/) | `\|\|\|` |
 | [Monocle](https://wiki.hypr.land/configuring/layouts/monocle-layout/) | `[M]` |
 
-Hyprland includes all four layouts; no extra installation or config is needed.
-After installing the plugin, click its symbol on a numbered workspace to cycle
-through dwindle, master, scrolling, and monocle. The plugin saves the selected
-layout for that workspace. Named and special workspaces show their layout but
-cannot be changed by clicking. Every bar shows the focused workspace's layout.
+## Switching layouts
+
+Hyprland includes all four layouts; no separate setup is needed. After
+installing the plugin, click its symbol on a numbered workspace to cycle through
+dwindle, master, scrolling, and monocle. The plugin saves the selected layout
+for that workspace.
+
+The indicator also follows layout changes made with `Super+L`. Named and
+special workspaces show their layout but cannot be changed by clicking. Every
+bar shows the focused workspace's layout.
 
 ## Installation
 
