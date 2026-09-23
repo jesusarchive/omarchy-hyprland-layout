@@ -7,11 +7,11 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "jesusarchive.workspace-layout"
+  moduleName: "jesusarchive.hyprland-layout"
 
   property string layoutName: ""
   property bool refreshPending: false
-  readonly property string helper: String(Qt.resolvedUrl("bin/hyprland-workspace-layout-cycle")).replace(/^file:\/\//, "")
+  readonly property string helper: String(Qt.resolvedUrl("bin/hyprland-layout-cycle")).replace(/^file:\/\//, "")
   readonly property string monitorName: {
     var win = root.QsWindow.window
     return win && win.screen ? String(win.screen.name) : ""
@@ -78,7 +78,7 @@ BarWidget {
   }
 
   FileView {
-    path: (Quickshell.env("HOME") || "") + "/.local/state/omarchy-workspace-layout/monitors.json"
+    path: (Quickshell.env("HOME") || "") + "/.local/state/omarchy-hyprland-layout/state.json"
     watchChanges: true
     printErrors: false
     onFileChanged: shortcutRefresh.restart()

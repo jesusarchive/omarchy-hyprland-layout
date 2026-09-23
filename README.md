@@ -1,8 +1,8 @@
-# Omarchy Workspace Layout
+# Omarchy Hyprland Layout
 
 [Dwm](https://dwm.suckless.org/) style layout indicator for the Omarchy bar.
-It shows the current [Hyprland layout](https://wiki.hypr.land/configuring/layouts/)
-beside the workspace numbers. Click the symbol to change layouts.
+It shows the current [Hyprland layout](https://wiki.hypr.land/configuring/layouts/).
+Click the symbol to change layouts.
 
 ![The Omarchy bar on an empty workspace with the master layout selected](preview.png)
 
@@ -31,11 +31,11 @@ The scope controls where the selected layout applies:
 You can set the same properties from a terminal:
 
 ```bash
-omarchy bar set jesusarchive.workspace-layout layoutScope monitor
-omarchy bar set jesusarchive.workspace-layout enableDwindle true --json
-omarchy bar set jesusarchive.workspace-layout enableMaster true --json
-omarchy bar set jesusarchive.workspace-layout enableScrolling true --json
-omarchy bar set jesusarchive.workspace-layout enableMonocle false --json
+omarchy bar set jesusarchive.hyprland-layout layoutScope monitor
+omarchy bar set jesusarchive.hyprland-layout enableDwindle true --json
+omarchy bar set jesusarchive.hyprland-layout enableMaster true --json
+omarchy bar set jesusarchive.hyprland-layout enableScrolling true --json
+omarchy bar set jesusarchive.hyprland-layout enableMonocle false --json
 ```
 
 Set `layoutScope` to `monitor`, `workspace`, or `global`. Use `true --json` to
@@ -48,10 +48,10 @@ The bar click and the optional `Super+L` shortcut use these settings.
 Install from the private repository:
 
 ```bash
-omarchy plugin add git@github.com:jesusarchive/omarchy-workspace-layout.git --enable
+omarchy plugin add git@github.com:jesusarchive/omarchy-hyprland-layout.git --enable
 ```
 
-Choose the left bar section, then drag the widget after the workspace numbers.
+Place the widget in the left bar section.
 
 ## Super+L
 
@@ -61,15 +61,15 @@ layout list and scope, add this to `~/.config/hypr/bindings.lua`:
 ```lua
 o.rebind(
   "SUPER + L",
-  "Cycle workspace layout",
-  os.getenv("HOME") .. "/.config/omarchy/plugins/jesusarchive.workspace-layout/bin/hyprland-workspace-layout-cycle"
+  "Cycle Hyprland layout",
+  os.getenv("HOME") .. "/.config/omarchy/plugins/jesusarchive.hyprland-layout/bin/hyprland-layout-cycle"
 )
 ```
 
 ## Removal
 
 ```bash
-omarchy plugin remove jesusarchive.workspace-layout
+omarchy plugin remove jesusarchive.hyprland-layout
 ```
 
 Remove the `Super+L` override from `~/.config/hypr/bindings.lua` if you added it.

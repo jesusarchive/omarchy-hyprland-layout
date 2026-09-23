@@ -5,7 +5,7 @@ import Quickshell.Io
 Item {
   id: root
 
-  readonly property string helper: String(Qt.resolvedUrl("bin/hyprland-workspace-layout-cycle")).replace(/^file:\/\//, "")
+  readonly property string helper: String(Qt.resolvedUrl("bin/hyprland-layout-cycle")).replace(/^file:\/\//, "")
   property bool pending: false
 
   function sync() {
